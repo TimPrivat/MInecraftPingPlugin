@@ -42,11 +42,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PigZapEvent;
 import org.bukkit.event.entity.PigZombieAngerEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.player.PlayerHarvestBlockEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.world.ChunkEvent;
@@ -78,8 +74,34 @@ public class EventListener implements Listener {
 
     }
 
+    public static int playersInBed = 0;
+
+    //Jesus christ man kann Lambdas nicht mit Annotations verwenden...
+    @EventHandler
+    private void increaseplayersInBed(PlayerBedEnterEvent e) {
+        playersInBed++;
+
+        if (ServerPlugin.getOnlinePlayers().size() <= 2)
+            return;
+
+        if (playersInBed > Math.round(ServerPlugin.getOnlinePlayers().size() / 2)) {
+            Bukkit.broadcastMessage("Überspringe die Nacht da die Hälfte der Spieler schläft");
+            ServerPlugin.getOnlinePlayers().get(1).getWorld().setTime(0);
+
+        } else {
+
+            Bukkit.broadcastMessage("Es müssen noch " + (Math.round(ServerPlugin.getOnlinePlayers().size() / 2) - playersInBed + " Spieler schlafen, um die NAcht zu überspringen"));
+        }
+    }
+
+    @EventHandler
+    private void deceraseplayersInBed(PlayerBedLeaveEvent e) {
+        playersInBed--;
+    }
 
 }
+
+
 
 
 

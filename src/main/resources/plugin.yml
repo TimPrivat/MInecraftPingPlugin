@@ -7,3 +7,6 @@ commands:
   ping:
     usage: /<command>
     description: Gibt dir deinen aktuellen Ping zum Server zurück
+  firework:
+    usage: /<command>
+    description: Zündet eine Rakete in deiner Blickrichtung oder in Richtung der Gegebenen Koordinaten
