@@ -1,5 +1,9 @@
 name: Ping
 version: '${project.version}'
-main: org.timsplugins.ping.Ping
+main: org.timsplugins.ping.ServerPlugin
 api-version: '1.20'
 load: STARTUP
+commands:
+  ping:
+    usage: /<command>
+    description: Gibt dir deinen aktuellen Ping zum Server zurück
