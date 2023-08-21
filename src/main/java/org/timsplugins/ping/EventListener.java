@@ -1,25 +1,14 @@
 package org.timsplugins.ping;
 
-import java.util.Date;
+import java.util.*;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.EntityEffect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.entity.Creeper;
@@ -63,14 +52,38 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
-import net.md_5.bungee.api.ChatColor;
-
 public class EventListener implements Listener {
 
 
     public EventListener(JavaPlugin plugins) {
 
         plugins.getServer().getPluginManager().registerEvents(this, plugins);
+
+        //added Begrüßungen
+        greetings.add("Ahoihoi");
+        greetings.add("Aloha");
+        greetings.add("Alles cool im Pool?");
+        greetings.add("Alles klar in Kanada?");
+        greetings.add("Alles Roger in Kambodscha?");
+        greetings.add("Gib Flosse, Genosse");
+        greetings.add("Grüetzi");
+        greetings.add("Grüßli Müsli");
+        greetings.add("Halo i bims");
+        greetings.add("Hallihallohallöle");
+        greetings.add("Hallöchen Popöchen");
+        greetings.add("Hallöchen mit Öchen");
+        greetings.add("Hola");
+        greetings.add("Howdy");
+        greetings.add("Juten Tach");
+        greetings.add("Moinjour");
+        greetings.add("Palim Palim");
+        greetings.add("Servus, Haselnuss");
+        greetings.add("Soos was los?");
+        greetings.add("Tuten Gag");
+        greetings.add("Whazuuuuuuuup?");
+        greetings.add("Yo Moinsen");
+        greetings.add("*Tips Fedora* M'");
+
 
     }
 
@@ -81,29 +94,44 @@ public class EventListener implements Listener {
     private void increaseplayersInBed(PlayerBedEnterEvent e) {
         playersInBed++;
 
-        if (ServerPlugin.getOnlinePlayers().size() <= 2)
-            return;
 
-        if (playersInBed > Math.round(ServerPlugin.getOnlinePlayers().size() / 2)) {
+        if (playersInBed >= Math.round(ServerPlugin.getOnlinePlayers().size() / 2) && ServerPlugin.getOnlinePlayers().get(0).getWorld().getTime()>13000) {
             Bukkit.broadcastMessage("Überspringe die Nacht da die Hälfte der Spieler schläft");
-            ServerPlugin.getOnlinePlayers().get(1).getWorld().setTime(0);
+            ServerPlugin.getOnlinePlayers().get(0).getWorld().setTime(0);
 
-        } else {
 
-            Bukkit.broadcastMessage("Es müssen noch " + (Math.round(ServerPlugin.getOnlinePlayers().size() / 2) - playersInBed + " Spieler schlafen, um die NAcht zu überspringen"));
+        } else if(playersInBed < Math.round(ServerPlugin.getOnlinePlayers().size() / 2)&&ServerPlugin.getOnlinePlayers().get(0).getWorld().getTime()>12542 ) {
+
+            Bukkit.broadcastMessage("Es müssen noch " + (Math.round(ServerPlugin.getOnlinePlayers().size() / 2) - playersInBed + " Spieler schlafen, um die Nacht zu überspringen"));
+        }else{
+            Player p = e.getPlayer();
+            p.sendMessage("Man kann nur"+ ChatColor.LIGHT_PURPLE+ " Nachts "+ ChatColor.WHITE+"schlafen");
+
         }
+        playersInBed=0;
     }
 
     @EventHandler
     private void deceraseplayersInBed(PlayerBedLeaveEvent e) {
         playersInBed--;
+        if(playersInBed < 0)
+            playersInBed=0;
     }
 
+
+    ArrayList<String> greetings = new ArrayList<>();
+    @EventHandler
+    private void begrüßungOnJoin(PlayerJoinEvent e) {
+
+    Random r = new Random();
+    Player p =e.getPlayer();
+    String gruß= greetings.get(r.nextInt(greetings.size()));
+    Bukkit.broadcastMessage(gruß+" "+org.bukkit.ChatColor.GREEN+p.getName());
+
+    }
+
+
 }
-
-
-
-
 
 
 

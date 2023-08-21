@@ -10,3 +10,7 @@ commands:
   firework:
     usage: /<command>
     description: Zündet eine Rakete in deiner Blickrichtung oder in Richtung der Gegebenen Koordinaten
+  setWayPoint:
+    usage: /<command>
+    description: Setzt einen WegPunkt
+

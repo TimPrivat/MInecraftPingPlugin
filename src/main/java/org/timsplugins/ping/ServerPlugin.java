@@ -13,6 +13,7 @@ import java.util.Collection;
 
 public final class ServerPlugin extends JavaPlugin {
     ChatCommands chatCommands = new ChatCommands();
+    public static final String defaultDirectory = System.getProperty("user.dir");
 
     @Override
     public void onEnable() {
@@ -20,6 +21,10 @@ public final class ServerPlugin extends JavaPlugin {
         super.onEnable();
         Bukkit.getLogger().info("Starte Plugin");
         new EventListener(this);
+
+
+
+
 
     }
 
@@ -51,6 +56,9 @@ public final class ServerPlugin extends JavaPlugin {
                     chatCommands.firework(sender,Color.PURPLE, null,null,null);
                 else
                 chatCommands.firework(sender,Color.PURPLE, Integer.parseInt(args[0]),Integer.parseInt(args[1]),Integer.parseInt(args[2]));
+                return true;
+            case "setWayPoint":
+                chatCommands.setWayPoint(sender);
                 return true;
 
 
