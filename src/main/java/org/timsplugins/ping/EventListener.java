@@ -87,35 +87,36 @@ public class EventListener implements Listener {
 
     }
 
-    public static int playersInBed = 0;
+    private int playersInBed = 0;
 
     //Jesus christ man kann Lambdas nicht mit Annotations verwenden...
     @EventHandler
-    private void increaseplayersInBed(PlayerBedEnterEvent e) {
+    public void onPlayerBedEnter(PlayerBedEnterEvent event) {
         playersInBed++;
-
-
-        if (playersInBed >= Math.round(ServerPlugin.getOnlinePlayers().size() / 2) && ServerPlugin.getOnlinePlayers().get(0).getWorld().getTime()>13000) {
-            Bukkit.broadcastMessage("Überspringe die Nacht da die Hälfte der Spieler schläft");
-            ServerPlugin.getOnlinePlayers().get(0).getWorld().setTime(0);
-
-
-        } else if(playersInBed < Math.round(ServerPlugin.getOnlinePlayers().size() / 2)&&ServerPlugin.getOnlinePlayers().get(0).getWorld().getTime()>12542 ) {
-
-            Bukkit.broadcastMessage("Es müssen noch " + (Math.round(ServerPlugin.getOnlinePlayers().size() / 2) - playersInBed + " Spieler schlafen, um die Nacht zu überspringen"));
-        }else{
-            Player p = e.getPlayer();
-            p.sendMessage("Man kann nur"+ ChatColor.LIGHT_PURPLE+ " Nachts "+ ChatColor.WHITE+"schlafen");
-
-        }
-        playersInBed=0;
+        checkSleep();
     }
 
     @EventHandler
-    private void deceraseplayersInBed(PlayerBedLeaveEvent e) {
+    public void onPlayerBedLeave(PlayerBedLeaveEvent event) {
         playersInBed--;
-        if(playersInBed < 0)
-            playersInBed=0;
+        checkSleep();
+    }
+
+    private void checkSleep() {
+        int totalPlayers = Bukkit.getOnlinePlayers().size();
+        int requiredPlayers = (int) Math.ceil((double) totalPlayers / 2);
+
+        if (playersInBed >= requiredPlayers) {
+            // Genug Spieler sind im Bett, starte Verzögerung
+            Bukkit.getScheduler().runTaskLater((Plugin) this, () -> {
+                if (playersInBed >= requiredPlayers) {
+                    // Überprüfe erneut, um sicherzustellen, dass genug Spieler immer noch im Bett sind
+                    Bukkit.getWorlds().forEach(world -> world.setTime(0));
+                    playersInBed = 0;
+                    Bukkit.broadcastMessage(ChatColor.YELLOW + "Die Nacht wurde überwunden!");
+                }
+            }, 100L); // 100L entspricht 5 Sekunden (20 Ticks pro Sekunde)
+        }
     }
 
 
