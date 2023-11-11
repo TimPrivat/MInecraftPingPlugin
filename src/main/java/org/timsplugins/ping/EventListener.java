@@ -54,11 +54,12 @@ import org.bukkit.util.Vector;
 
 public class EventListener implements Listener {
 
-
+    JavaPlugin plugin;
     public EventListener(JavaPlugin plugins) {
 
         plugins.getServer().getPluginManager().registerEvents(this, plugins);
 
+        plugin = plugins;
         //added Begrüßungen
         greetings.add("Ahoihoi");
         greetings.add("Aloha");
@@ -108,7 +109,7 @@ public class EventListener implements Listener {
 
         if (playersInBed >= requiredPlayers) {
             // Genug Spieler sind im Bett, starte Verzögerung
-            Bukkit.getScheduler().runTaskLater((Plugin) this, () -> {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 if (playersInBed >= requiredPlayers) {
                     // Überprüfe erneut, um sicherzustellen, dass genug Spieler immer noch im Bett sind
                     Bukkit.getWorlds().forEach(world -> world.setTime(0));
